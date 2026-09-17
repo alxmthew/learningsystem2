@@ -8,12 +8,9 @@
 // Exits non-zero on any error. Dangling edges are warnings, not errors: an edge
 // can legitimately point at something you have not written down yet.
 
-import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
-import { join, dirname, basename, relative } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const VAULT = join(ROOT, 'vault');
+import { existsSync } from 'node:fs';
+import { join, basename, relative } from 'node:path';
+import { loadVault, VAULT } from './lib/vault.mjs';
 
 const INBOX_CAP = 40;
 const FOCUS_MIN = 3;
@@ -31,161 +28,15 @@ const warnings = [];
 const err = (where, msg) => errors.push(`${where}: ${msg}`);
 const warn = (where, msg) => warnings.push(`${where}: ${msg}`);
 
-/* ---------- a deliberately small yaml reader ----------------------------
-   It understands exactly the shapes this vault uses: scalars, folded and
-   literal blocks, flow lists, block lists, and block lists of mappings. It
-   throws on anything else rather than guessing, so a parse failure here means
-   "write it the way the rest of the vault is written", not "the file is fine".
-------------------------------------------------------------------------- */
-
-function scalar(raw) {
-  const s = raw.trim();
-  if (s === '' || s === 'null' || s === '~') return null;
-  if (s === 'true') return true;
-  if (s === 'false') return false;
-  if (/^-?\d+$/.test(s)) return Number(s);
-  if (s.startsWith("'") && s.endsWith("'") && s.length >= 2) return s.slice(1, -1).replace(/''/g, "'");
-  if (s.startsWith('"') && s.endsWith('"') && s.length >= 2) return s.slice(1, -1).replace(/\\"/g, '"');
-  return s;
-}
-
-function flowList(raw) {
-  const inner = raw.trim().slice(1, -1).trim();
-  if (inner === '') return [];
-  return inner.split(',').map((v) => scalar(v));
-}
-
-function parseYaml(text, where) {
-  const lines = text.split('\n');
-  const out = {};
-  let i = 0;
-  const indentOf = (l) => l.length - l.trimStart().length;
-  const blank = (l) => l.trim() === '' || l.trim().startsWith('#');
-
-  const gatherBlock = (baseIndent, fold) => {
-    const buf = [];
-    i++;
-    while (i < lines.length) {
-      const l = lines[i];
-      if (l.trim() !== '' && indentOf(l) <= baseIndent) break;
-      buf.push(l.slice(baseIndent + 2));
-      i++;
-    }
-    while (buf.length && buf[buf.length - 1].trim() === '') buf.pop();
-    return fold ? buf.join(' ').replace(/\s+/g, ' ').trim() : buf.join('\n');
-  };
-
-  const parseMapping = (baseIndent) => {
-    const obj = {};
-    while (i < lines.length) {
-      const line = lines[i];
-      if (blank(line)) { i++; continue; }
-      const ind = indentOf(line);
-      if (ind < baseIndent) break;
-      if (ind > baseIndent) throw new Error(`${where}:${i + 1}: unexpected indentation`);
-      const m = line.trim().match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-      if (!m) throw new Error(`${where}:${i + 1}: cannot read "${line.trim()}"`);
-      const [, key, rest] = m;
-      if (rest === '>-' || rest === '>' || rest === '|' || rest === '|-') {
-        obj[key] = gatherBlock(ind, rest.startsWith('>'));
-      } else if (rest.startsWith('[')) {
-        obj[key] = flowList(rest);
-        i++;
-      } else if (rest === '') {
-        i++;
-        // either a block list or a nested mapping
-        while (i < lines.length && blank(lines[i])) i++;
-        if (i < lines.length && indentOf(lines[i]) > ind && lines[i].trim().startsWith('- ')) {
-          obj[key] = parseList(indentOf(lines[i]));
-        } else if (i < lines.length && indentOf(lines[i]) > ind) {
-          obj[key] = parseMapping(indentOf(lines[i]));
-        } else {
-          obj[key] = null;
-        }
-      } else {
-        obj[key] = scalar(rest);
-        i++;
-      }
-    }
-    return obj;
-  };
-
-  const parseList = (baseIndent) => {
-    const arr = [];
-    while (i < lines.length) {
-      const line = lines[i];
-      if (blank(line)) { i++; continue; }
-      const ind = indentOf(line);
-      if (ind < baseIndent) break;
-      if (!line.trim().startsWith('- ')) break;
-      const rest = line.trim().slice(2);
-      const kv = rest.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-      if (kv) {
-        // a mapping item: rewrite the line so the mapping parser sees a clean start
-        lines[i] = ' '.repeat(ind + 2) + rest;
-        arr.push(parseMapping(ind + 2));
-      } else {
-        arr.push(scalar(rest));
-        i++;
-      }
-    }
-    return arr;
-  };
-
-  const res = parseMapping(0);
-  Object.assign(out, res);
-  return out;
-}
-
-function readEntity(abs) {
-  const where = relative(ROOT, abs);
-  const text = readFileSync(abs, 'utf8');
-  if (!text.startsWith('---\n')) { err(where, 'no frontmatter'); return null; }
-  const end = text.indexOf('\n---', 4);
-  if (end === -1) { err(where, 'frontmatter is not closed'); return null; }
-  try {
-    const data = parseYaml(text.slice(4, end), where);
-    return { where, data, body: text.slice(end + 4).trim(), file: abs };
-  } catch (e) {
-    err(where, e.message.replace(`${where}:`, 'line '));
-    return null;
-  }
-}
-
-function readYamlFile(rel) {
-  const abs = join(VAULT, rel);
-  if (!existsSync(abs)) { err(rel, 'missing'); return null; }
-  try {
-    return parseYaml(readFileSync(abs, 'utf8'), rel);
-  } catch (e) {
-    err(rel, e.message);
-    return null;
-  }
-}
-
-function walk(dir) {
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir).flatMap((name) => {
-    const abs = join(dir, name);
-    return statSync(abs).isDirectory() ? walk(abs) : abs.endsWith('.md') ? [abs] : [];
-  });
-}
-
-/* ---------- load --------------------------------------------------------- */
-
 if (!existsSync(VAULT)) {
   console.error('no vault/. Run: node scripts/seed-vault.mjs');
   process.exit(1);
 }
 
-const load = (sub) => walk(join(VAULT, sub)).map(readEntity).filter(Boolean);
-const nodes = load('map');
-const questions = load('questions');
-const beliefs = load('beliefs');
-const claims = load('claims');
-const resources = load('resources');
-const passes = load('passes');
-const all = [...nodes, ...questions, ...beliefs, ...claims, ...resources, ...passes];
+const vault = loadVault();
+for (const e of vault.errors) err(e.split(':')[0], e.split(':').slice(1).join(':').trim());
+
+const { nodes, questions, beliefs, claims, resources, passes, all, inbox } = vault;
 
 const byId = new Map();
 for (const e of all) {
@@ -198,6 +49,12 @@ for (const e of all) {
 
 const isA = (id, type) => byId.get(id)?.data.type === type;
 const exists = (id) => byId.has(id);
+
+const readYamlFile = (rel) => {
+  const r = rel === 'focus.yaml' ? vault.focus : rel === 'edges.yaml' ? vault.edges : vault.trunks;
+  if (r.error) { err(rel, r.error); return null; }
+  return r.data;
+};
 
 /* ---------- nodes: depth cap 3 ------------------------------------------ */
 
@@ -255,7 +112,6 @@ for (const { data, where } of beliefs) {
 
 /* ---------- resources: the inbox cap and the drain ----------------------- */
 
-const inbox = resources.filter((r) => relative(VAULT, r.file).startsWith('resources/inbox/'));
 if (inbox.length > INBOX_CAP)
   err('resources/inbox', `${inbox.length} items, cap is ${INBOX_CAP}. Queue or drop before adding more. The cap is the feature.`);
 

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=Public+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E6E9E2; --ink:#1B2021; --rule:#C2C9BE;
+  --low:#9AA096; --high:#2E4A45; --revision:#4A3B7A;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans",-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--serif); font-size:17px; line-height:1.5;
+  display:grid; grid-template-columns:212px 1fr;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+.num{font-family:var(--sans);font-variant-numeric:tabular-nums}
+
+/* left rail: a table of contents, not a nav bar */
+#rail{border-right:1px solid var(--rule);padding:30px 24px;overflow:auto}
+#rail h1{font-size:20px;font-weight:400;margin:0}
+#rail .sub{font-size:13px;color:var(--low);font-style:italic;margin:2px 0 28px}
+#rail a.item{display:block;color:var(--low);text-decoration:none;padding:3px 0 3px 22px;font-size:16px}
+#rail a.item:hover{color:var(--ink)}
+#rail a.item.on{color:var(--ink);padding-left:0}
+#rail a.item.on::before{content:"";display:inline-block;width:14px;border-top:1px solid var(--ink);vertical-align:middle;margin-right:8px}
+#rail .meta{margin-top:30px;padding-top:16px;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:12px;color:var(--low);line-height:1.9}
+
+#main{overflow:auto;position:relative}
+.pad{padding:46px 54px 90px;max-width:780px}
+h2{font-weight:400;font-size:27px;margin:0 0 3px;letter-spacing:.005em}
+.lede{color:var(--low);font-size:15px;font-style:italic;margin:0 0 34px}
+.empty{color:var(--low);font-style:italic;max-width:44em;line-height:1.65}
+.sorts{font-family:var(--sans);font-size:12px;color:var(--low);margin:0 0 6px}
+.sorts a{text-decoration:none;cursor:pointer;color:var(--low)}
+.sorts a.on{color:var(--ink)}
+.sorts span{opacity:.5;margin:0 9px}
+
+/* the one bold element: the credence scale */
+.belief{padding:28px 0;border-bottom:1px solid var(--rule)}
+.prop{font-size:19.5px;margin:0 0 20px;line-height:1.4}
+.scale{position:relative;height:24px;margin:22px 0 7px}
+.scale .line{position:absolute;top:11px;left:9px;right:9px;border-top:1px solid var(--ink)}
+.scale .tick{position:absolute;top:7px;height:9px;border-left:1px solid var(--rule)}
+.scale .ghost{position:absolute;top:6px;width:12px;height:12px;border-radius:50%;
+  border:1px solid var(--revision);transform:translateX(-50%);opacity:.45}
+.scale .mark{position:absolute;top:4px;width:16px;height:16px;border-radius:50%;transform:translateX(-50%)}
+.scale .marknum{position:absolute;top:-19px;transform:translateX(-50%);font-family:var(--sans);font-size:12px}
+.scalefoot{display:flex;justify-content:space-between;font-family:var(--sans);
+  font-size:11.5px;color:var(--low);margin-bottom:16px}
+.hist{font-family:var(--sans);font-size:12.5px;line-height:1.85;color:var(--low)}
+.hist .d{color:var(--revision)}
+.small{font-size:14.5px;color:var(--low);margin-top:12px;font-style:italic}
+.tagline{font-family:var(--sans);font-size:11.5px;color:var(--low);margin-top:12px}
+
+/* questions set large in italic: the display moment */
+.q{padding:32px 0;border-bottom:1px solid var(--rule)}
+.qtext{font-size:27px;font-style:italic;font-weight:300;line-height:1.28;margin:0 0 16px}
+.ans{margin:0 0 14px;max-width:40em}
+.qmeta{font-family:var(--sans);font-size:11.5px;color:var(--low);display:flex;gap:24px;flex-wrap:wrap}
+.prompt{color:var(--revision);font-style:italic;font-size:15px;margin-top:12px}
+.rot{font-family:var(--sans);font-size:11px;color:var(--low);margin-bottom:8px}
+
+.pass{padding:26px 0;border-bottom:1px solid var(--rule)}
+.pass .date{font-family:var(--sans);font-size:11.5px;color:var(--low)}
+.pass .ch{font-size:18px;margin:6px 0 10px}
+.pass .fl{color:var(--low);font-size:15px}
+
+/* map */
+#mapwrap{position:absolute;inset:0}
+#mapwrap svg{width:100%;height:100%;display:block;cursor:grab}
+#mapwrap svg.drag{cursor:grabbing}
+#detail{position:absolute;top:0;right:0;bottom:0;width:340px;border-left:1px solid var(--rule);
+  background:var(--paper);padding:32px 28px;overflow:auto;display:none}
+#detail h3{font-weight:400;font-size:21px;margin:0 0 4px}
+#detail .qq{font-style:italic;color:var(--ink);margin:0 0 16px}
+#detail .sec{font-family:var(--sans);font-size:11px;color:var(--low);margin:20px 0 4px}
+#detail .val{font-size:15px;line-height:1.55}
+#detail .val a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);cursor:pointer}
+#detail .close{position:absolute;top:14px;right:18px;color:var(--low);cursor:pointer;font-size:19px}
+#legend{position:absolute;left:24px;bottom:22px;font-family:var(--sans);font-size:11px;color:var(--low);line-height:1.9}
+#legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+#maphint{position:absolute;left:24px;top:22px;font-family:var(--sans);font-size:11px;color:var(--low)}
+.tlabel{font-family:var(--serif);font-style:italic;fill:var(--low);font-size:17px}
+.nlabel{font-family:var(--serif);fill:var(--ink);font-size:10.5px;opacity:.72}
+</style>
+</head>
+<body>
+
+<nav id="rail">
+  <h1>Delta</h1>
+  <div class="sub">what changed, and why</div>
+  <a class="item" href="#map">Map</a>
+  <a class="item" href="#ledger">Ledger</a>
+  <a class="item" href="#passes">Passes</a>
+  <a class="item" href="#questions">Questions</a>
+  <a class="item" href="#inbox">Inbox</a>
+  <div class="meta" id="railmeta"></div>
+</nav>
+
+<main id="main"></main>
+
+<script>
+const DATA = /*__DATA__*/ null;
+
+/* ---------- helpers ---------------------------------------------------- */
+
+const D = DATA;
+const ALL = [].concat(D.nodes, D.questions, D.beliefs, D.claims, D.resources, D.passes);
+const BY = new Map(ALL.map(e => [e.id, e]));
+const NODE = new Map(D.nodes.map(n => [n.id, n]));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const el = (h) => { const d = document.createElement('div'); d.innerHTML = h; return d; };
+
+const STATUS_AT = { unexplored: -1, circling: 32, working: 66, 'can-teach': 100 };
+
+function ramp(p) {
+  const a = [0x9A, 0xA0, 0x96], b = [0x2E, 0x4A, 0x45];
+  const t = Math.max(0, Math.min(1, p / 100));
+  return 'rgb(' + a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',') + ')';
+}
+function statusColor(s) {
+  const p = STATUS_AT[s];
+  return p < 0 ? '#C2C9BE' : ramp(p);
+}
+function daysSince(d) {
+  if (!d) return null;
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const then = Date.parse(d + 'T00:00:00Z');
+  if (isNaN(then)) return null;
+  return Math.max(0, Math.round((today - then) / 86400000));
+}
+function ago(d) {
+  const n = daysSince(d);
+  if (n === null) return 'never';
+  return n === 0 ? 'today' : n === 1 ? '1 day ago' : n + ' days ago';
+}
+// position along the ruled line, inset so a mark at 0 or 100 is not clipped
+const at = p => 'calc(9px + ' + (p / 100) + ' * (100% - 18px))';
+
+/* pass counts per node, from resources queued against them */
+const passCount = new Map();
+for (const p of D.passes) {
+  const r = BY.get(p.resource);
+  for (const t of (r && r.queued_against) || []) {
+    if (NODE.has(t)) passCount.set(t, (passCount.get(t) || 0) + 1);
+    const q = BY.get(t);
+    if (q && q.type === 'question') for (const n of q.nodes || []) passCount.set(n, (passCount.get(n) || 0) + 1);
+  }
+}
+
+/* ---------- ledger ------------------------------------------------------ */
+
+let ledgerSort = 'moved';
+const SORTS = {
+  moved:     ['most moved',       b => -b.history.reduce((s, h, i) => s + (i ? Math.abs(h.credence - b.history[i - 1].credence) : 0), 0)],
+  examined:  ['least examined',   b => -(daysSince(b.last_examined) === null ? 1e6 : daysSince(b.last_examined))],
+  bearing:   ['most load-bearing', b => -(b.load_bearing_for || []).length],
+  lowest:    ['lowest confidence', b => b.credence],
+};
+
+function viewLedger() {
+  const sorts = Object.keys(SORTS).map(k =>
+    '<a data-sort="' + k + '" class="' + (k === ledgerSort ? 'on' : '') + '">' + SORTS[k][0] + '</a>'
+  ).join('<span>/</span>');
+
+  const rows = D.beliefs.slice().sort((a, b) => SORTS[ledgerSort][1](a) - SORTS[ledgerSort][1](b)).map(b => {
+    const ghosts = b.history.slice(0, -1).map(h =>
+      '<div class="ghost" style="left:' + at(h.credence) + '" title="' + esc(h.date + ': ' + h.credence) + '"></div>').join('');
+    const ticks = [0, 25, 50, 75, 100].map(p => '<div class="tick" style="left:' + at(p) + '"></div>').join('');
+    const hist = b.history.map((h, i) => {
+      const prev = i ? b.history[i - 1].credence : null;
+      const delta = prev === null ? '' : ' <span class="d">' + prev + ' → ' + h.credence + '</span>';
+      return '<div>' + esc(h.date) + (i ? delta : ' <span class="d">' + h.credence + '</span>') + ' &middot; ' + esc(h.why) + '</div>';
+    }).join('');
+    return '<div class="belief">' +
+      '<p class="prop">' + esc(b.proposition) + '</p>' +
+      '<div class="scale">' + ticks +
+        '<div class="line"></div>' + ghosts +
+        '<div class="mark" style="left:' + at(b.credence) + ';background:' + ramp(b.credence) + '"></div>' +
+        '<div class="marknum" style="left:' + at(b.credence) + '">' + b.credence + '</div>' +
+      '</div>' +
+      '<div class="scalefoot"><span>0</span><span>100</span></div>' +
+      '<div class="hist">' + hist + '</div>' +
+      '<div class="small">Falsified by: ' + esc(b.falsifier) + '</div>' +
+      '<div class="tagline">' + (b.last_examined ? 'examined ' + ago(b.last_examined) : 'never examined') +
+        ((b.load_bearing_for || []).length ? ' &nbsp;&middot;&nbsp; load-bearing for ' + b.load_bearing_for.map(esc).join(', ') : '') +
+      '</div></div>';
+  }).join('');
+
+  const body = D.beliefs.length
+    ? '<div class="sorts">' + sorts + '</div>' + rows
+    : '<p class="empty">No beliefs yet.</p>';
+
+  return '<div class="pad"><h2>Ledger</h2>' +
+    '<p class="lede">The only place where changing your mind is visible as data.</p>' + body + '</div>';
+}
+
+/* ---------- passes ------------------------------------------------------ */
+
+function viewPasses() {
+  if (!D.passes.length) {
+    return '<div class="pad"><h2>Passes</h2><p class="lede">One input, one written change.</p>' +
+      '<p class="empty">Nothing here yet. This is the feed you would be glad to reread in a year, ' +
+      'and it starts the first time you run <span class="num">/pass</span> on something you have actually read. ' +
+      'A pass that says nothing changed still counts, as long as you say why the time was worth spending.</p></div>';
+  }
+  const rows = D.passes.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(p => {
+    const r = BY.get(p.resource);
+    return '<div class="pass">' +
+      '<div class="date">' + esc(p.date) + ' &middot; ' + esc((r && r.title) || p.resource) +
+        (p.minutes_spent ? ' &middot; <span class="num">' + p.minutes_spent + '</span> min' : '') + '</div>' +
+      '<div class="ch">' + esc(p.nothing_changed ? 'Nothing changed. ' + (p.worth_it || '') : p.changed) + '</div>' +
+      (p.follows ? '<div class="fl">' + esc(p.follows) + '</div>' : '') +
+    '</div>';
+  }).join('');
+  return '<div class="pad"><h2>Passes</h2><p class="lede">One input, one written change.</p>' + rows + '</div>';
+}
+
+/* ---------- questions --------------------------------------------------- */
+
+function viewQuestions() {
+  const focus = D.focus || [];
+  const rank = q => { const i = focus.indexOf(q.id); return i > -1 ? i : 1e6; };
+  const ordered = D.questions.slice().sort((a, b) => rank(a) - rank(b));
+  const rows = ordered.map(q => {
+    const days = daysSince(q.last_moved);
+    const inRot = focus.indexOf(q.id) > -1;
+    const queued = D.resources.filter(r => (r.queued_against || []).indexOf(q.id) > -1);
+    return '<div class="q">' +
+      (inRot ? '<div class="rot">in rotation</div>' : '') +
+      '<p class="qtext">' + esc(q.text) + '</p>' +
+      '<p class="ans">' + esc(q.current_answer) + '</p>' +
+      '<div class="qmeta">' +
+        '<span>confidence <span class="num">' + q.confidence + '</span></span>' +
+        '<span>moved ' + ago(q.last_moved) + '</span>' +
+        '<span>' + esc(q.cadence) + '</span>' +
+        '<span>' + (q.next_move ? 'next: ' + esc(q.next_move) : 'no next move set') + '</span>' +
+        (queued.length ? '<span><span class="num">' + queued.length + '</span> queued</span>' : '') +
+      '</div>' +
+      (days !== null && days >= 30 ? '<div class="prompt">Still active, or park it?</div>' : '') +
+    '</div>';
+  }).join('');
+  return '<div class="pad"><h2>Questions</h2>' +
+    '<p class="lede">' + focus.length + ' of ' + D.questions.length + ' in rotation. The cap is 3 to 5.</p>' + rows + '</div>';
+}
+
+/* ---------- inbox ------------------------------------------------------- */
+
+function viewInbox() {
+  const inbox = D.resources.filter(r => r.in_inbox);
+  const body = inbox.length
+    ? inbox.map(r => '<div class="pass"><div class="date">' + esc(r.medium || '') +
+        (r.minutes ? ' &middot; <span class="num">' + r.minutes + '</span> min' : '') + '</div>' +
+        '<div class="ch">' + esc(r.title) + '</div>' +
+        '<div class="fl">' + ((r.queued_against || []).length
+          ? 'against ' + r.queued_against.map(esc).join(', ')
+          : 'no target yet, so it cannot leave the inbox') + '</div></div>').join('')
+    : '<p class="empty">Empty. A link earns a place here only against a question or a node it might move. ' +
+      'The cap of 40 is not a storage limit, it is the thing that forces the drain.</p>';
+  return '<div class="pad"><h2>Inbox</h2><p class="lede"><span class="num">' + inbox.length +
+    '</span> of 40. Queue it or drop it.</p>' + body + '</div>';
+}
+
+/* ---------- map --------------------------------------------------------- */
+
+let mapPos = null;
+
+function simulate(nodes, links, W, H) {
+  const anchors = {};
+  D.trunks.forEach((t, i) => {
+    const a = (i / D.trunks.length) * Math.PI * 2 - Math.PI / 2;
+    anchors[t.id] = { x: W / 2 + Math.cos(a) * W * 0.30, y: H / 2 + Math.sin(a) * H * 0.32, name: t.name };
+  });
+  nodes.forEach((n, i) => {
+    const a = anchors[n.trunk] || { x: W / 2, y: H / 2 };
+    const ang = i * 2.3999;
+    n.x = a.x + Math.cos(ang) * (18 + (i % 7) * 9);
+    n.y = a.y + Math.sin(ang) * (18 + (i % 7) * 9);
+    n.vx = 0; n.vy = 0;
+  });
+  const ITERS = 320;
+  for (let k = 0; k < ITERS; k++) {
+    const alpha = 1 - k / ITERS;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy;
+        if (d2 < 0.01) { dx = 0.1; dy = 0.1; d2 = 0.02; }
+        if (d2 < 4900) {
+          const d = Math.sqrt(d2), f = (70 - d) / d * 0.22 * alpha;
+          a.vx -= dx * f; a.vy -= dy * f; b.vx += dx * f; b.vy += dy * f;
+        }
+      }
+    }
+    for (const l of links) {
+      const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, d = Math.hypot(dx, dy) || 0.01;
+      const f = (d - l.len) / d * 0.10 * alpha;
+      l.s.vx += dx * f; l.s.vy += dy * f; l.t.vx -= dx * f; l.t.vy -= dy * f;
+    }
+    for (const n of nodes) {
+      const a = anchors[n.trunk] || { x: W / 2, y: H / 2 };
+      n.vx += (a.x - n.x) * (n.parent ? 0.006 : 0.020) * alpha;
+      n.vy += (a.y - n.y) * (n.parent ? 0.006 : 0.020) * alpha;
+      n.x += n.vx; n.y += n.vy; n.vx *= 0.62; n.vy *= 0.62;
+    }
+  }
+  return anchors;
+}
+
+function buildMap() {
+  const W = 1500, H = 1050;
+  const nodes = D.nodes.map(n => Object.assign({}, n));
+  const idx = new Map(nodes.map(n => [n.id, n]));
+  const links = [];
+  for (const n of nodes) if (n.parent && idx.has(n.parent)) links.push({ s: idx.get(n.parent), t: n, len: 42, kind: 'tree' });
+  const typed = [];
+  for (const e of D.edges) {
+    const s = idx.get(e.from), t = idx.get(e.to);
+    if (!s || !t) continue;
+    const cross = s.trunk !== t.trunk;
+    typed.push({ s, t, cross: cross && e.type === 'bridges', type: e.type, note: e.note });
+    links.push({ s, t, len: cross ? 260 : 150, kind: 'typed' });
+  }
+  const anchors = simulate(nodes, links, W, H);
+
+  const treeSvg = links.filter(l => l.kind === 'tree').map(l =>
+    '<line x1="' + l.s.x.toFixed(1) + '" y1="' + l.s.y.toFixed(1) + '" x2="' + l.t.x.toFixed(1) + '" y2="' + l.t.y.toFixed(1) +
+    '" stroke="#C2C9BE" stroke-width="0.8"/>').join('');
+
+  // cross-trunk bridges are the only curved lines. everything else is straight.
+  const typedSvg = typed.map(e => {
+    if (e.cross) {
+      const mx = (e.s.x + e.t.x) / 2, my = (e.s.y + e.t.y) / 2;
+      const dx = e.t.x - e.s.x, dy = e.t.y - e.s.y;
+      const cx = mx - dy * 0.22, cy = my + dx * 0.22;
+      return '<path d="M' + e.s.x.toFixed(1) + ' ' + e.s.y.toFixed(1) + ' Q' + cx.toFixed(1) + ' ' + cy.toFixed(1) +
+        ' ' + e.t.x.toFixed(1) + ' ' + e.t.y.toFixed(1) + '" fill="none" stroke="#1B2021" stroke-width="1.1" opacity="0.5"><title>' +
+        esc(e.s.name + ' ' + e.type + ' ' + e.t.name + (e.note ? ': ' + e.note : '')) + '</title></path>';
+    }
+    return '<line x1="' + e.s.x.toFixed(1) + '" y1="' + e.s.y.toFixed(1) + '" x2="' + e.t.x.toFixed(1) + '" y2="' + e.t.y.toFixed(1) +
+      '" stroke="#1B2021" stroke-width="1" opacity="0.35" stroke-dasharray="4 3"><title>' +
+      esc(e.s.name + ' ' + e.type + ' ' + e.t.name + (e.note ? ': ' + e.note : '')) + '</title></line>';
+  }).join('');
+
+  const circles = nodes.map(n => {
+    const p = passCount.get(n.id) || 0;
+    const r = 3.2 + Math.sqrt(p) * 3.4;
+    const hit = '<circle data-id="' + n.id + '" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) +
+      '" r="9" fill="transparent" style="cursor:pointer"></circle>';
+    return hit + '<circle data-id="' + n.id + '" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="' + r.toFixed(1) +
+      '" fill="' + statusColor(n.status) + '"' + (n.parent ? '' : ' stroke="#1B2021" stroke-opacity="0.35" stroke-width="0.8"') +
+      ' style="cursor:pointer"><title>' + esc(n.name + ' · ' + n.status + ' · ' + p + ' passes') + '</title></circle>';
+  }).join('');
+
+  const nlabels = nodes.filter(n => !n.parent).map(n =>
+    '<text class="nlabel" x="' + n.x.toFixed(1) + '" y="' + (n.y - 8).toFixed(1) + '" text-anchor="middle">' + esc(n.name) + '</text>').join('');
+
+  const tlabels = Object.keys(anchors).map(k => {
+    const a = anchors[k];
+    return '<text class="tlabel" x="' + a.x.toFixed(1) + '" y="' + a.y.toFixed(1) + '" text-anchor="middle">' + esc(a.name) + '</text>';
+  }).join('');
+
+  const legend = ['unexplored', 'circling', 'working', 'can-teach']
+    .map(s => '<div><i style="background:' + statusColor(s) + '"></i>' + s + '</div>').join('');
+
+  return '<div id="mapwrap">' +
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" id="svg"><g id="cam">' +
+      treeSvg + typedSvg + tlabels + circles + nlabels +
+    '</g></svg>' +
+    '<div id="maphint">drag to pan, scroll to zoom, click a node</div>' +
+    '<div id="legend">' + legend + '<div style="margin-top:6px">size is passes written, not links saved</div></div>' +
+    '<div id="detail"><span class="close">×</span><div id="dbody"></div></div>' +
+  '</div>';
+}
+
+function showDetail(id) {
+  const n = NODE.get(id);
+  if (!n) return;
+  const kids = D.nodes.filter(x => x.parent === id);
+  const qs = D.questions.filter(q => (q.nodes || []).indexOf(id) > -1);
+  const bs = D.beliefs.filter(b => (b.nodes || []).indexOf(id) > -1);
+  const es = D.edges.filter(e => e.from === id || e.to === id);
+  const rs = D.resources.filter(r => (r.queued_against || []).indexOf(id) > -1);
+  const p = passCount.get(id) || 0;
+  const link = x => '<a data-goto="' + esc(x) + '">' + esc((NODE.get(x) || {}).name || x) + '</a>';
+  const sec = (label, html) => html ? '<div class="sec">' + label + '</div><div class="val">' + html + '</div>' : '';
+
+  document.getElementById('dbody').innerHTML =
+    '<h3>' + esc(n.name) + '</h3>' +
+    (n.question ? '<p class="qq">' + esc(n.question) + '</p>' : '') +
+    '<div class="val"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' +
+      statusColor(n.status) + ';margin-right:7px"></span>' + esc(n.status) +
+      ' &middot; <span class="num">' + p + '</span> passes</div>' +
+    sec('where', esc(n.trunk) + (n.parent ? ' &rsaquo; ' + link(n.parent) : '')) +
+    sec('terms', (n.terms || []).map(esc).join(', ')) +
+    sec('below', kids.map(k => link(k.id)).join(', ')) +
+    sec('questions', qs.map(q => esc(q.text)).join('<br>')) +
+    sec('beliefs', bs.map(b => esc(b.proposition) + ' <span class="num">(' + b.credence + ')</span>').join('<br>')) +
+    sec('edges', es.map(e => (e.from === id ? '' : link(e.from) + ' ') + '<i>' + esc(e.type) + '</i>' +
+      (e.to === id ? '' : ' ' + link(e.to)) + (e.note ? '<br><span style="color:var(--low)">' + esc(e.note) + '</span>' : '')).join('<br>')) +
+    sec('queued', rs.map(r => esc(r.title)).join('<br>'));
+  document.getElementById('detail').style.display = 'block';
+}
+
+function wireMap() {
+  const svg = document.getElementById('svg');
+  const cam = document.getElementById('cam');
+  let k = 1, tx = 0, ty = 0, down = null;
+  const apply = () => cam.setAttribute('transform', 'translate(' + tx + ',' + ty + ') scale(' + k + ')');
+  if (mapPos) { k = mapPos.k; tx = mapPos.tx; ty = mapPos.ty; apply(); }
+
+  svg.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = svg.getBoundingClientRect();
+    const sx = (e.clientX - r.left) / r.width * 1500, sy = (e.clientY - r.top) / r.height * 1050;
+    const f = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+    const nk = Math.max(0.4, Math.min(6, k * f));
+    tx = sx - (sx - tx) * (nk / k); ty = sy - (sy - ty) * (nk / k); k = nk;
+    apply(); mapPos = { k, tx, ty };
+  }, { passive: false });
+
+  svg.addEventListener('mousedown', e => { down = { x: e.clientX, y: e.clientY, tx, ty }; svg.classList.add('drag'); });
+  window.addEventListener('mouseup', () => { down = null; svg.classList.remove('drag'); });
+  window.addEventListener('mousemove', e => {
+    if (!down) return;
+    const r = svg.getBoundingClientRect();
+    tx = down.tx + (e.clientX - down.x) / r.width * 1500;
+    ty = down.ty + (e.clientY - down.y) / r.height * 1050;
+    apply(); mapPos = { k, tx, ty };
+  });
+
+  svg.addEventListener('click', e => {
+    const id = e.target.getAttribute && e.target.getAttribute('data-id');
+    if (id) showDetail(id);
+  });
+  document.querySelector('#detail .close').addEventListener('click', () => {
+    document.getElementById('detail').style.display = 'none';
+  });
+  document.getElementById('detail').addEventListener('click', e => {
+    const g = e.target.getAttribute && e.target.getAttribute('data-goto');
+    if (g) showDetail(g);
+  });
+}
+
+/* ---------- routing ------------------------------------------------------ */
+
+const VIEWS = { map: buildMap, ledger: viewLedger, passes: viewPasses, questions: viewQuestions, inbox: viewInbox };
+
+function render() {
+  const key = (location.hash || '#map').slice(1);
+  const view = VIEWS[key] ? key : 'map';
+  document.getElementById('main').innerHTML = VIEWS[view]();
+  for (const a of document.querySelectorAll('#rail a.item')) a.classList.toggle('on', a.getAttribute('href') === '#' + view);
+  if (view === 'map') wireMap();
+  if (view === 'ledger') for (const a of document.querySelectorAll('.sorts a')) {
+    a.addEventListener('click', () => { ledgerSort = a.getAttribute('data-sort'); render(); });
+  }
+}
+
+document.getElementById('railmeta').innerHTML =
+  D.nodes.length + ' nodes<br>' +
+  D.beliefs.length + ' beliefs<br>' +
+  D.passes.length + ' passes<br>' +
+  D.resources.filter(r => r.in_inbox).length + '/40 inbox<br>' +
+  '<span style="opacity:.7">built ' + D.built + '</span>';
+
+window.addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>

@@ -52,22 +52,39 @@ Implemented in `.claude/commands/`. Full behavior is specified in SPEC.md sectio
 ## Repo layout
 
 ```
-SPEC.md                 the build spec. Authoritative.
-CLAUDE.md               this file. Working agreements.
-seed/seed-map.json      the import target for Phase 0.
-scripts/seed-vault.mjs  builds vault/ from seed-map.json. Node builtins only, no install.
-scripts/check-vault.mjs the invariant checker. Run it before every commit that touches vault/.
-vault/                  the database. Markdown and YAML. Canonical.
-.claude/commands/       the agent.
+SPEC.md                  the build spec. Authoritative.
+CLAUDE.md                this file. Working agreements.
+seed/seed-map.json       the import target for Phase 0.
+scripts/lib/vault.mjs    reads the vault. Shared by the checker and the viewer.
+scripts/seed-vault.mjs   builds vault/ from seed-map.json.
+scripts/check-vault.mjs  the invariant checker. Run before every commit touching vault/.
+scripts/build-viewer.mjs bakes the vault into a single HTML file.
+viewer/template.html     the viewer's markup, CSS and JS. Edit this, not viewer.html.
+vault/                   the database. Markdown and YAML. Canonical.
+.claude/commands/        the agent.
 ```
 
-Both scripts run with bare `node`. There is no package.json in Phase 0 and there should not be one until Phase 1.
+Everything runs with bare `node`. There is no package.json and there should not be
+one until the Phase 1 viewer needs Next.js.
 
 ```
 node scripts/seed-vault.mjs          # refuses to overwrite an existing vault
 node scripts/seed-vault.mjs --force  # rebuilds from seed, destroying hand edits
 node scripts/check-vault.mjs         # exits non-zero if an invariant is broken
+node scripts/build-viewer.mjs        # writes viewer.html, then open it
 ```
+
+## The viewer
+
+`viewer.html` is a read-only render of the vault: Map, Ledger, Passes, Questions,
+Inbox. One file, no server, no framework, no install. It is **derived and
+gitignored**. Rebuild it after any vault change. Nothing in it is state, and
+nothing writes back through it.
+
+It is deliberately not the Phase 1 viewer from SPEC.md section 5. It exists so
+the vault is legible while you live in it for the first week. If it turns out to
+be enough, that is worth knowing before committing to Next.js, SQLite and
+d3-force.
 
 ## What the checker enforces
 
