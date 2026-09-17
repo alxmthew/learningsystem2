@@ -1,0 +1,544 @@
+{
+  "version": 1,
+  "note": "Import target for Phase 0. Every node starts at status 'unexplored' unless marked otherwise. Depth is capped: trunk > node > child > terms[]. Nothing nests below terms.",
+
+  "trunks": [
+    {
+      "id": "reality",
+      "name": "Reality",
+      "question": "What is true?",
+      "nodes": [
+        {
+          "id": "epistemology",
+          "name": "Epistemology",
+          "question": "How do I know what I think I know?",
+          "status": "circling",
+          "children": [
+            { "id": "knowledge-basics", "name": "Knowledge and justification", "terms": ["knowledge vs belief", "justified true belief", "skepticism", "rationalism vs empiricism", "testimony", "expertise", "map vs territory"] },
+            { "id": "inference", "name": "Inference", "terms": ["induction", "deduction", "abduction", "Bayesian reasoning", "updating", "falsification", "testability", "underdetermination", "causality vs correlation"] },
+            { "id": "calibration", "name": "Calibration and humility", "terms": ["uncertainty", "calibration", "intellectual humility", "sufficient evidence", "when to trust intuition"] },
+            { "id": "social-epistemology", "name": "Social and machine epistemology", "terms": ["collective knowledge", "internet epistemology", "AI-mediated epistemology", "how do you know when an AI is right", "epistemic dependence"] }
+          ]
+        },
+        {
+          "id": "philosophy-of-science",
+          "name": "Philosophy of science",
+          "question": "What makes an explanation scientific rather than merely persuasive?",
+          "children": [
+            { "id": "pos-figures", "name": "Figures", "terms": ["Popper", "Kuhn", "Lakatos", "Feyerabend"] },
+            { "id": "pos-concepts", "name": "Concepts", "terms": ["paradigms", "scientific revolutions", "replication", "models vs reality", "scientific realism", "instrumentalism"] }
+          ]
+        },
+        {
+          "id": "metaphysics",
+          "name": "Metaphysics",
+          "question": "What actually exists?",
+          "children": [
+            { "id": "meta-core", "name": "Core", "terms": ["being", "objects", "properties", "identity", "change", "causation", "possibility", "necessity", "universals"] },
+            { "id": "meta-positions", "name": "Positions", "terms": ["emergence", "reductionism", "materialism", "idealism", "dualism", "panpsychism", "process philosophy"] }
+          ]
+        },
+        {
+          "id": "philosophy-of-mind",
+          "name": "Philosophy of mind",
+          "question": "What is consciousness, and could a machine have it?",
+          "status": "circling",
+          "children": [
+            { "id": "consciousness-problem", "name": "The problem", "terms": ["qualia", "hard problem", "other minds", "personal identity", "selfhood"] },
+            { "id": "theories-of-mind", "name": "Theories", "terms": ["functionalism", "physicalism", "emergentism", "Global Workspace Theory", "Integrated Information Theory", "higher-order theories", "predictive processing", "embodied cognition", "extended mind"] },
+            { "id": "nonhuman-minds", "name": "Nonhuman minds", "terms": ["animal consciousness", "machine consciousness", "simulation vs instantiation", "moral patienthood"] }
+          ]
+        },
+        {
+          "id": "ethics",
+          "name": "Ethics",
+          "question": "What makes something good?",
+          "children": [
+            { "id": "traditions", "name": "Traditions", "terms": ["virtue ethics", "utilitarianism", "deontology", "care ethics", "contractualism", "pragmatism"] },
+            { "id": "ethics-questions", "name": "Live questions", "terms": ["intentions vs outcomes", "what we owe strangers", "what we owe future generations", "moral luck", "moral uncertainty", "integrity", "complicity", "ends vs means", "power and responsibility", "doing good inside an imperfect institution"] }
+          ]
+        },
+        {
+          "id": "existential-philosophy",
+          "name": "Existential philosophy",
+          "children": [
+            { "id": "exist-figures", "name": "Figures", "terms": ["Kierkegaard", "Nietzsche", "Heidegger", "Sartre", "Camus", "Beauvoir"] },
+            { "id": "exist-themes", "name": "Themes", "terms": ["authenticity", "freedom", "responsibility", "absurdity", "death", "anxiety", "becoming"] }
+          ]
+        },
+        {
+          "id": "phenomenology",
+          "name": "Phenomenology",
+          "question": "What is experience like from the inside?",
+          "children": [
+            { "id": "phen-figures", "name": "Figures", "terms": ["Husserl", "Heidegger", "Merleau-Ponty"] },
+            { "id": "phen-themes", "name": "Themes", "terms": ["embodiment", "attention", "perception", "being-in-the-world", "lived experience", "intersubjectivity"] }
+          ]
+        },
+        {
+          "id": "greek-thought",
+          "name": "Greek thought",
+          "children": [
+            { "id": "presocratics", "name": "Presocratics", "terms": ["Thales", "Anaximander", "Heraclitus", "Parmenides", "Pythagoras", "Democritus", "what is everything made of", "one or many"] },
+            { "id": "socrates", "name": "Socrates", "terms": ["Socratic method", "examined life", "wisdom as recognized ignorance", "dialogue"] },
+            { "id": "plato", "name": "Plato", "terms": ["Forms", "Republic", "Symposium", "Phaedrus", "Apology", "the cave", "eros", "beauty", "justice", "soul"] },
+            { "id": "aristotle", "name": "Aristotle", "terms": ["logic", "eudaimonia", "virtue", "friendship", "politics", "four causes", "biology", "rhetoric", "poetics"] },
+            { "id": "hellenistic", "name": "Hellenistic", "terms": ["Stoicism", "Epictetus", "Seneca", "Marcus Aurelius", "Epicureanism", "Skepticism", "Cynicism"] }
+          ]
+        },
+        {
+          "id": "ancient-greek-language",
+          "name": "Ancient Greek language",
+          "question": "Can I read Plato in Greek?",
+          "children": [
+            { "id": "greek-mechanics", "name": "Mechanics", "terms": ["alphabet", "pronunciation", "cases", "declensions", "conjugations", "participles", "infinitives", "syntax", "core vocabulary"] },
+            { "id": "greek-dialects", "name": "Dialects", "terms": ["Homeric", "Attic", "Koine"] }
+          ]
+        },
+        {
+          "id": "universe",
+          "name": "Universe",
+          "question": "Why is there something rather than nothing?",
+          "children": [
+            { "id": "physics-foundations", "name": "Foundations", "terms": ["matter", "energy", "forces", "fields", "space", "time", "symmetry", "conservation laws"] },
+            { "id": "relativity", "name": "Relativity", "terms": ["special", "general", "spacetime", "gravity", "black holes"] },
+            { "id": "quantum", "name": "Quantum mechanics", "terms": ["wavefunctions", "superposition", "measurement", "entanglement", "interpretations", "quantum fields"] },
+            { "id": "thermodynamics", "name": "Thermodynamics", "terms": ["entropy", "arrow of time", "information", "emergence"] },
+            { "id": "cosmology", "name": "Cosmology", "terms": ["Big Bang", "inflation", "CMB", "dark matter", "dark energy", "structure formation", "fate of the universe"] },
+            { "id": "cosmic-questions", "name": "Big questions", "terms": ["why these laws", "fine-tuning", "anthropic principle", "multiverse", "simulation arguments", "infinity", "why complexity arises"] }
+          ]
+        },
+        {
+          "id": "mathematics",
+          "name": "Mathematics",
+          "question": "What does mathematics reveal about reality?",
+          "children": [
+            { "id": "math-areas", "name": "Areas", "terms": ["proof", "infinity", "probability", "geometry", "calculus", "linear algebra", "information theory", "complexity", "dynamical systems", "chaos"] },
+            { "id": "math-limits", "name": "Limits", "terms": ["Godel", "computability", "undecidability"] },
+            { "id": "philosophy-of-math", "name": "Philosophy of mathematics", "terms": ["Platonism", "formalism", "intuitionism", "discovered or invented", "unreasonable effectiveness"] }
+          ]
+        },
+        {
+          "id": "god",
+          "name": "God",
+          "question": "Is there something divine, transcendent, or ultimate, and what would that even mean?",
+          "children": [
+            { "id": "conceptions", "name": "Conceptions of God", "terms": ["classical theism", "deism", "pantheism", "panentheism", "polytheism", "process theology", "Brahman", "ground of being"] },
+            { "id": "arguments-for", "name": "Arguments for", "terms": ["cosmological", "contingency", "teleological", "fine-tuning", "ontological", "moral argument", "consciousness", "religious experience"] },
+            { "id": "arguments-against", "name": "Challenges", "terms": ["logical problem of evil", "evidential problem of evil", "free-will defense", "soul-making", "divine hiddenness", "naturalistic explanation", "geographic correlation of belief"] },
+            { "id": "faith-epistemology", "name": "Epistemology of faith", "terms": ["evidence vs faith", "revelation", "mystical experience", "Pascal's wager", "Kierkegaard's leap", "religious disagreement", "can faith be rational"] },
+            { "id": "god-and-morality", "name": "God and morality", "terms": ["divine command theory", "Euthyphro dilemma", "moral realism without God", "natural law", "Kant's postulates", "Dostoevsky", "Nietzsche"] }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "mind",
+      "name": "Mind",
+      "question": "How do minds work?",
+      "nodes": [
+        {
+          "id": "cognitive-psychology",
+          "name": "Cognitive psychology",
+          "children": [
+            { "id": "cog-core", "name": "Core processes", "terms": ["attention", "memory", "working memory", "perception", "reasoning", "judgment", "decision-making"] },
+            { "id": "cog-higher", "name": "Higher order", "terms": ["cognitive biases", "problem solving", "creativity", "mental models", "metacognition"] }
+          ]
+        },
+        {
+          "id": "social-psychology",
+          "name": "Social psychology",
+          "children": [
+            { "id": "social-forces", "name": "Social forces", "terms": ["conformity", "status", "social comparison", "persuasion", "group identity", "norms", "power", "reputation", "reciprocity"] },
+            { "id": "connection", "name": "Connection", "terms": ["attraction", "friendship", "belonging", "loneliness"] }
+          ]
+        },
+        {
+          "id": "developmental-psychology",
+          "name": "Developmental psychology",
+          "status": "circling",
+          "children": [
+            { "id": "stages", "name": "Stages", "terms": ["childhood", "adolescence", "emerging adulthood"] },
+            { "id": "development-themes", "name": "Themes", "terms": ["identity formation", "attachment", "autonomy", "social development", "moral development"] }
+          ]
+        },
+        {
+          "id": "personality",
+          "name": "Personality",
+          "children": [
+            { "id": "personality-models", "name": "Models", "terms": ["Big Five", "temperament", "trait vs state"] },
+            { "id": "self-concept", "name": "Self-concept", "terms": ["narrative identity", "personality development", "self-concept"] }
+          ]
+        },
+        {
+          "id": "emotion",
+          "name": "Emotion",
+          "children": [
+            { "id": "emotion-theory", "name": "Theory", "terms": ["what are emotions", "emotion construction", "affect", "valence and arousal", "regulation"] },
+            { "id": "emotions", "name": "Particular emotions", "terms": ["fear", "anger", "shame", "guilt", "envy", "joy", "awe", "love"] }
+          ]
+        },
+        {
+          "id": "motivation",
+          "name": "Motivation",
+          "children": [
+            { "id": "motivation-theory", "name": "Theory", "terms": ["intrinsic vs extrinsic", "self-determination theory", "agency", "reward", "dopamine"] },
+            { "id": "behavior-change", "name": "Behavior change", "terms": ["goals", "habits", "self-efficacy", "learned helplessness"] }
+          ]
+        },
+        {
+          "id": "positive-psychology",
+          "name": "Positive psychology",
+          "terms": ["well-being", "flourishing", "meaning", "relationships", "gratitude", "awe", "purpose", "flow"],
+          "children": []
+        },
+        {
+          "id": "clinical-psychology",
+          "name": "Clinical psychology",
+          "note": "Understand without pathologizing everything.",
+          "children": [
+            { "id": "conditions", "name": "Conditions", "terms": ["anxiety", "depression", "OCD", "trauma", "personality disorders", "psychosis"] },
+            { "id": "modalities", "name": "Modalities", "terms": ["CBT", "ACT", "DBT", "psychodynamic"] }
+          ]
+        },
+        {
+          "id": "relationship-psychology",
+          "name": "Relationship psychology",
+          "children": [
+            { "id": "bonds", "name": "Bonds", "terms": ["attachment", "intimacy", "vulnerability", "trust", "interdependence", "codependency"] },
+            { "id": "rupture-repair", "name": "Rupture and repair", "terms": ["conflict", "repair", "rejection", "jealousy", "desire"] }
+          ]
+        },
+        {
+          "id": "self-security",
+          "name": "Self-security",
+          "question": "What would it mean for my sense of worth to actually be secure?",
+          "status": "working",
+          "children": [
+            { "id": "self-worth", "name": "Self-worth", "terms": ["contingent self-esteem", "unconditional self-worth", "achievement", "validation", "status", "comparison", "external approval", "internal standards"] },
+            { "id": "secure-identity", "name": "Secure identity", "terms": ["who am I without achievement", "identity vs performance", "authenticity", "self-trust", "values", "integrity"] },
+            { "id": "rejection", "name": "Rejection", "terms": ["rejection sensitivity", "abandonment", "social uncertainty", "rumination", "mind-reading", "ambiguous signals"] },
+            { "id": "shame", "name": "Shame", "terms": ["shame vs guilt", "self-criticism", "perfectionism", "defensiveness", "narcissistic defenses", "vulnerability"] },
+            { "id": "security-capacities", "name": "Capacities", "terms": ["attachment security", "emotional regulation", "distress tolerance", "internal locus of control", "self-efficacy"] }
+          ]
+        },
+        {
+          "id": "unconditional-love",
+          "name": "Unconditional love",
+          "question": "Can love be unconditional while relationships have conditions?",
+          "status": "circling",
+          "children": [
+            { "id": "love-distinctions", "name": "Distinctions", "terms": ["loving vs approving", "love vs possession", "love vs dependency", "love vs admiration", "love vs attachment", "love and freedom", "love and boundaries"] },
+            { "id": "love-traditions", "name": "Traditions", "terms": ["agape", "eros", "philia", "storge", "Christian caritas", "metta"] }
+          ]
+        },
+        {
+          "id": "learning",
+          "name": "Learning",
+          "question": "How do I personally learn difficult things most effectively?",
+          "status": "working",
+          "note": "Not 'learning styles'. That literature is useful mainly as a case study in a popular model failing to replicate.",
+          "children": [
+            { "id": "mechanisms", "name": "Mechanisms", "terms": ["retrieval practice", "spacing", "interleaving", "generation", "elaboration", "testing effect", "desirable difficulties", "feedback", "worked examples", "deliberate practice", "chunking", "schema formation"] },
+            { "id": "understanding", "name": "Understanding", "terms": ["Feynman technique", "explaining aloud", "analogies", "counterexamples", "first principles", "causal models"] },
+            { "id": "memory-mechanics", "name": "Memory", "terms": ["encoding", "retrieval", "forgetting curve", "spaced repetition", "active recall", "mnemonics"] },
+            { "id": "learning-conditions", "name": "Conditions for learning", "terms": ["distraction", "cognitive load", "environment", "deep work", "breaks", "sleep"] },
+            { "id": "personal-lab", "name": "Personal laboratory", "terms": ["method comparison table", "24-hour recall test", "7-day recall test", "explain without notes"] }
+          ]
+        },
+        {
+          "id": "focus-and-intuition",
+          "name": "Focus and intuition",
+          "question": "When does self-awareness improve performance, and when does it destroy it?",
+          "children": [
+            { "id": "attention-states", "name": "States", "terms": ["attention", "flow", "automaticity", "boredom", "rumination", "performance under pressure"] },
+            { "id": "intuition", "name": "Intuition", "terms": ["expertise", "pattern recognition", "tacit knowledge", "childlike cognition", "play", "curiosity"] }
+          ]
+        },
+        {
+          "id": "neuroscience",
+          "name": "Neuroscience",
+          "status": "circling",
+          "children": [
+            { "id": "neuro-basics", "name": "Basics", "terms": ["neurons", "synapses", "neurotransmitters", "circuits", "plasticity"] },
+            { "id": "systems", "name": "Systems", "terms": ["sensory systems", "motor systems", "memory systems", "reward", "stress response"] }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "life",
+      "name": "Life",
+      "question": "How should I live?",
+      "nodes": [
+        {
+          "id": "vervaeke",
+          "name": "Meaning crisis (Vervaeke)",
+          "question": "What kinds of knowing could AI weaken or strengthen?",
+          "status": "working",
+          "children": [
+            { "id": "the-crisis", "name": "The crisis", "terms": ["what is meaning", "nihilism", "alienation", "fragmentation", "disenchantment", "why modernity produces meaninglessness"] },
+            { "id": "four-knowings", "name": "Four kinds of knowing", "terms": ["propositional", "procedural", "perspectival", "participatory", "what education trains only propositionally"] },
+            { "id": "relevance-realization", "name": "Relevance realization", "terms": ["salience", "framing", "what matters", "recursive relevance", "intelligence as relevance", "combinatorial explosion"] },
+            { "id": "wisdom", "name": "Wisdom", "terms": ["wisdom vs intelligence", "self-transcendence", "perspective", "transformation", "foolishness", "insight", "rationality"] },
+            { "id": "practices", "name": "Practices", "terms": ["meditation", "contemplation", "dialogue", "Socratic practice", "flow", "ritual", "embodied practice"] },
+            { "id": "genealogy", "name": "Intellectual genealogy", "terms": ["Plato", "Aristotle", "Stoicism", "Augustine", "Aquinas", "Copernicus", "Descartes", "Kant", "Romanticism", "Nietzsche", "Jung", "Heidegger"] },
+            { "id": "critiques", "name": "Critiques", "terms": ["which claims are empirical", "which are philosophical", "which are historical interpretation", "what actually predicts anything", "where critics disagree"] }
+          ]
+        },
+        {
+          "id": "meaning",
+          "name": "Meaning",
+          "question": "Does meaning need to be cosmically objective to be real?",
+          "children": [
+            { "id": "components", "name": "Components", "terms": ["coherence", "purpose", "significance", "belonging"] },
+            { "id": "sources", "name": "Sources", "terms": ["sacredness", "transcendence", "ritual", "community", "awe", "beauty", "nature", "mortality"] },
+            { "id": "meaning-without-god", "name": "Meaning without God", "terms": ["existentialism", "humanism", "absurdism", "Buddhism", "naturalism", "constructed meaning"] }
+          ]
+        },
+        {
+          "id": "flourishing",
+          "name": "Human flourishing",
+          "question": "What constitutes flourishing in an age where machines outperform us intellectually?",
+          "status": "working",
+          "children": [
+            { "id": "eudaimonia", "name": "Eudaimonia", "terms": ["Aristotle", "virtue", "function argument", "the good life", "practical wisdom"] },
+            { "id": "flourishing-components", "name": "Components", "terms": ["agency", "autonomy", "mastery", "relationships", "health", "purpose", "play", "beauty", "service", "creativity", "transcendence"] }
+          ]
+        },
+        {
+          "id": "relationships",
+          "name": "Relationships",
+          "children": [
+            { "id": "forms", "name": "Forms", "terms": ["friendship", "romantic love", "community", "mentorship", "weak ties", "deep ties"] },
+            { "id": "dynamics", "name": "Dynamics", "terms": ["belonging", "intimacy", "vulnerability", "reciprocity", "conflict", "repair", "loneliness"] }
+          ]
+        },
+        {
+          "id": "physical-health",
+          "name": "Physical health",
+          "children": [
+            { "id": "inputs", "name": "Inputs", "terms": ["exercise", "nutrition", "sleep", "recovery", "body literacy"] },
+            { "id": "brain-health", "name": "Brain health", "terms": ["exercise", "sleep", "stress", "social connection", "neuroplasticity", "learning"] },
+            { "id": "preventive", "name": "Preventive medicine", "terms": ["what actually causes early mortality", "what is worth screening", "biomarkers vs noise", "risk reduction", "optimization vs health anxiety"] }
+          ]
+        },
+        {
+          "id": "spirituality",
+          "name": "Spirituality and practice",
+          "children": [
+            { "id": "contemplative", "name": "Contemplative practice", "terms": ["meditation", "prayer", "silence", "retreat", "fasting", "attention training"] },
+            { "id": "experience", "name": "Experience", "terms": ["mysticism", "awe", "ego dissolution", "transformative experience", "the sacred"] }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "civilization",
+      "name": "Civilization",
+      "question": "What world are we building?",
+      "nodes": [
+        {
+          "id": "ai",
+          "name": "AI",
+          "status": "working",
+          "children": [
+            { "id": "how-intelligence-works", "name": "How intelligence works", "terms": ["intelligence", "learning", "generalization", "representation", "search", "planning", "reasoning", "memory", "world models", "agency", "creativity"] },
+            { "id": "technical-foundations", "name": "Technical foundations", "terms": ["linear algebra", "probability", "optimization", "information theory", "perceptrons", "backprop", "gradient descent", "embeddings", "representation learning"] },
+            { "id": "transformers", "name": "Transformers", "terms": ["attention", "tokenization", "pretraining", "in-context learning"] },
+            { "id": "post-training", "name": "Post-training", "terms": ["SFT", "RLHF", "RLAIF", "RL", "verifiers", "reasoning training", "environments"] },
+            { "id": "scaling", "name": "Scaling", "terms": ["scaling laws", "compute", "data", "algorithms", "test-time compute", "the bitter lesson"] },
+            { "id": "interpretability", "name": "Interpretability", "terms": ["features", "circuits", "sparse autoencoders", "mechanistic interpretability"] },
+            { "id": "compute", "name": "Compute", "terms": ["transistors", "CPUs", "GPUs", "ASICs", "TPUs", "memory", "networking", "chip design"] },
+            { "id": "supply-chain", "name": "Semiconductor supply chain", "terms": ["EDA", "foundries", "lithography", "packaging", "HBM", "TSMC", "ASML", "Broadcom", "NVIDIA"] },
+            { "id": "infrastructure", "name": "Training and inference infrastructure", "terms": ["clusters", "distributed training", "parallelism", "reliability", "latency", "throughput", "batching", "quantization", "serving", "nondeterminism"] },
+            { "id": "datacenters", "name": "Data centers and energy", "terms": ["power", "cooling", "water", "grid", "transmission", "financing", "geography", "nuclear", "natural gas", "renewables", "storage"] },
+            { "id": "data", "name": "Data", "terms": ["internet text", "synthetic data", "human feedback", "data quality", "filtering", "licensing", "copyright"] },
+            { "id": "architectures", "name": "New architectures", "terms": ["world models", "JEPA", "diffusion", "state-space models", "neuromorphic", "embodied systems", "hybrid symbolic-neural", "biological computing", "quantum"] },
+            { "id": "agi", "name": "AGI", "terms": ["definitions", "economic AGI", "transformative AI", "superintelligence", "bottlenecks", "continual learning", "long-horizon agency"] },
+            { "id": "timelines", "name": "Timelines", "terms": ["which assumptions generate each forecast", "fast views", "skeptical views", "what would falsify each"] },
+            { "id": "physical-world", "name": "AI and the physical world", "terms": ["robotics", "manipulation", "autonomous vehicles", "sensors", "control theory", "embodied intelligence"] },
+            { "id": "ai-products", "name": "AI products", "terms": ["adoption", "retention", "habit", "memory", "context", "distribution", "interfaces", "voice", "wearables", "ambient", "agents"] },
+            { "id": "relational-ai", "name": "Relational AI", "terms": ["anthropomorphism", "attachment", "emotional signaling", "personality", "sycophancy", "dependency", "persuasion", "trust", "parasocial relationships", "AI companions", "AI therapy"] },
+            { "id": "ai-and-cognition", "name": "AI and human cognition", "terms": ["cognitive offloading", "memory", "writing", "reasoning", "creativity", "learned helplessness", "epistemic dependence", "agency"] },
+            { "id": "alignment", "name": "Safety and alignment", "terms": ["outer alignment", "inner alignment", "goal misgeneralization", "deception", "power seeking", "corrigibility", "oversight", "constitutional AI", "scalable supervision"] },
+            { "id": "ai-and-society", "name": "AI and society", "terms": ["automation", "augmentation", "displacement", "wages", "productivity", "abundance", "capital concentration", "inequality", "concentration of power", "resilience"] },
+            { "id": "ai-industry", "name": "Industry and strategy", "terms": ["model labs", "infrastructure companies", "venture dynamics", "moats", "commoditization", "application vs model value capture"] }
+          ]
+        },
+        {
+          "id": "institutions",
+          "name": "Institutions",
+          "question": "Under what conditions does each way of organizing work well or badly?",
+          "status": "circling",
+          "children": [
+            { "id": "what-is-an-institution", "name": "What is an institution", "terms": ["formal vs informal", "rules norms incentives", "organizations vs institutions", "legitimacy", "authority", "trust", "path dependence", "why good institutions decay", "why bad ones persist"] },
+            { "id": "private", "name": "Private", "terms": ["firms", "markets", "private schools", "foundations", "private labs", "profit incentives", "competition", "price signals", "ownership", "principal-agent problems", "short-termism"] },
+            { "id": "public", "name": "Public", "terms": ["governments", "public schools", "courts", "regulators", "public goods", "democratic accountability", "bureaucracy", "administrative capacity", "political incentives"] },
+            { "id": "failure-modes", "name": "Failure modes", "terms": ["externalities", "information asymmetry", "monopoly", "coordination failure", "rent seeking", "regulatory capture", "knowledge problems", "concentrated benefits diffuse costs"] },
+            { "id": "alternatives", "name": "Beyond the binary", "terms": ["nonprofits", "cooperatives", "mutual aid", "commons", "universities", "open source", "public-private partnerships", "PBCs", "community governance"] },
+            { "id": "ostrom", "name": "Commons and polycentricity", "terms": ["Ostrom", "polycentric governance", "community-managed resources", "bottom-up institutions", "Coase", "Hayek", "North", "Scott"] },
+            { "id": "scale", "name": "Centralization vs decentralization", "terms": ["economies of scale", "local knowledge", "standardization", "experimentation", "federalism", "subsidiarity", "central planning"] },
+            { "id": "institutions-and-flourishing", "name": "Institutions and flourishing", "terms": ["which build agency", "which create dependency", "what an institution owes its members", "can institutions hold values", "encoding a mission that survives leadership", "can profit-maximizing firms pursue public benefit"] }
+          ]
+        },
+        {
+          "id": "religion",
+          "name": "Religion",
+          "question": "What do religious traditions do, believe, and cultivate?",
+          "children": [
+            { "id": "abrahamic", "name": "Abrahamic", "terms": ["Judaism", "covenant", "Torah", "Christianity", "incarnation", "grace", "resurrection", "Islam", "tawhid", "Qur'an", "Sufism"] },
+            { "id": "dharmic", "name": "Dharmic", "terms": ["Hinduism", "Brahman", "atman", "karma", "moksha", "Buddhism", "dukkha", "impermanence", "no-self", "Jainism", "ahimsa"] },
+            { "id": "east-asian", "name": "East Asian", "terms": ["Taoism", "Confucianism", "Shinto", "Zen"] },
+            { "id": "other-traditions", "name": "Other", "terms": ["animism", "indigenous traditions", "Sikhism", "Baha'i", "Zoroastrianism"] },
+            { "id": "what-religion-does", "name": "What religion does", "terms": ["meaning", "hope", "coping", "death anxiety", "awe", "ritual", "moral formation", "community", "trust", "charity", "institutional continuity"] },
+            { "id": "pathologies", "name": "Pathologies", "terms": ["dogmatism", "tribalism", "fundamentalism", "suppression of dissent", "sacred values", "intergroup conflict"] },
+            { "id": "after-secularization", "name": "After secularization", "terms": ["death of God", "secular meaning", "civil religion", "ideologies as quasi-religions", "wellness spirituality", "are humans fundamentally religious"] }
+          ]
+        },
+        {
+          "id": "economics",
+          "name": "Economics",
+          "children": [
+            { "id": "micro", "name": "Micro", "terms": ["incentives", "markets", "prices", "externalities", "public goods"] },
+            { "id": "macro", "name": "Macro", "terms": ["growth", "productivity", "labor", "inequality", "capital"] }
+          ]
+        },
+        {
+          "id": "power",
+          "name": "Power",
+          "terms": ["institutions", "governments", "corporations", "elites", "networks", "bureaucracy", "coordination", "legitimacy"],
+          "children": []
+        },
+        {
+          "id": "history",
+          "name": "History",
+          "question": "How did previous general-purpose technologies actually transform society?",
+          "children": [
+            { "id": "eras", "name": "Eras", "terms": ["ancient civilizations", "Scientific Revolution", "Enlightenment", "Industrial Revolution", "20th century", "internet revolution"] }
+          ]
+        },
+        {
+          "id": "anthropology",
+          "name": "Anthropology",
+          "terms": ["culture", "ritual", "kinship", "identity", "status", "gift exchange", "norms", "human universals"],
+          "children": []
+        },
+        {
+          "id": "sociology",
+          "name": "Sociology",
+          "terms": ["institutions", "networks", "class", "status", "organizations", "communities"],
+          "children": []
+        }
+      ]
+    },
+
+    {
+      "id": "creation",
+      "name": "Creation",
+      "question": "What do I do with what I know?",
+      "nodes": [
+        { "id": "writing", "name": "Writing", "terms": ["essays", "storytelling", "argument", "explanation", "synthesis", "revision", "voice"], "children": [] },
+        { "id": "conversation", "name": "Conversation", "terms": ["listening", "asking questions", "disagreement", "Socratic dialogue", "interviewing", "emotional conversations"], "children": [] },
+        { "id": "building", "name": "Building", "terms": ["product", "design", "engineering", "experimentation", "distribution", "organizations"], "children": [] },
+        { "id": "research", "name": "Research", "terms": ["finding evidence", "reading papers", "evaluating sources", "interviewing experts", "synthesizing literatures"], "children": [] },
+        { "id": "taste", "name": "Taste", "terms": ["beauty", "aesthetics", "art", "music", "film", "photography", "architecture", "fashion"], "children": [] },
+        { "id": "rhetoric", "name": "Rhetoric", "terms": ["logos", "ethos", "pathos", "framing", "metaphor", "narrative", "persuasion"], "children": [] },
+        { "id": "leadership", "name": "Leadership", "terms": ["decision-making", "judgment", "hiring", "culture", "conflict", "institution building"], "children": [] }
+      ]
+    }
+  ],
+
+  "focus": [
+    "what-is-a-meaningful-life",
+    "secure-without-complacent",
+    "capacities-to-cultivate",
+    "what-is-knowing",
+    "how-far-does-scaling-go"
+  ],
+
+  "questions": [
+    {
+      "id": "what-is-a-meaningful-life",
+      "trunk": "life",
+      "text": "What actually constitutes a meaningful life?",
+      "current_answer": "I don't have one yet.",
+      "confidence": 10,
+      "cadence": "weekly",
+      "nodes": ["meaning", "flourishing", "vervaeke"]
+    },
+    {
+      "id": "secure-without-complacent",
+      "trunk": "mind",
+      "text": "How do I become psychologically secure without becoming complacent?",
+      "current_answer": "Provisional: security is about the floor, ambition is about the ceiling, and they may be less coupled than they feel.",
+      "confidence": 30,
+      "cadence": "weekly",
+      "nodes": ["self-security", "motivation"]
+    },
+    {
+      "id": "capacities-to-cultivate",
+      "trunk": "civilization",
+      "text": "What capacities should humans cultivate as AI becomes more capable?",
+      "current_answer": "I don't have one yet.",
+      "confidence": 15,
+      "cadence": "weekly",
+      "nodes": ["ai-and-cognition", "flourishing", "learning"]
+    },
+    {
+      "id": "what-is-knowing",
+      "trunk": "reality",
+      "text": "What does it mean to know something?",
+      "current_answer": "Provisional: Vervaeke's four kinds suggest propositional knowledge is the least of it, but I can't yet say what makes participatory knowing knowledge rather than experience.",
+      "confidence": 25,
+      "cadence": "seasonal",
+      "nodes": ["epistemology", "four-knowings"]
+    },
+    {
+      "id": "how-far-does-scaling-go",
+      "trunk": "civilization",
+      "text": "How far can current AI paradigms actually scale?",
+      "current_answer": "Provisional: further than skeptics think on benchmarks, less far than advocates think on long-horizon agency.",
+      "confidence": 40,
+      "cadence": "weekly",
+      "nodes": ["scaling", "agi", "timelines"]
+    }
+  ],
+
+  "beliefs": [
+    {
+      "id": "meaning-need-not-be-cosmic",
+      "proposition": "Meaning does not need to be cosmically objective to be real.",
+      "credence": 65,
+      "history": [{ "date": "seed", "credence": 65, "why": "Starting position, largely inherited and not yet examined." }],
+      "falsifier": "A case where meaning survives only under cosmic grounding and no constructed account reproduces the effect.",
+      "load_bearing_for": ["what-is-a-meaningful-life"],
+      "nodes": ["meaning", "god"]
+    },
+    {
+      "id": "offloading-is-not-atrophy",
+      "proposition": "Cognitive offloading to AI is not automatically cognitive atrophy; it depends on whether the skill was load-bearing for judgment.",
+      "credence": 55,
+      "history": [{ "date": "seed", "credence": 55, "why": "Starting position. Feels convenient, which is a warning sign." }],
+      "falsifier": "Evidence that offloading a non-load-bearing skill still degrades judgment in the domain within a year.",
+      "load_bearing_for": ["capacities-to-cultivate"],
+      "nodes": ["ai-and-cognition", "learning"]
+    }
+  ],
+
+  "edges": [
+    { "from": "god", "type": "bridges", "to": "meaning", "note": "Does meaning require cosmic grounding?" },
+    { "from": "religion", "type": "bridges", "to": "institutions", "note": "Why do charismatic movements become bureaucracies?" },
+    { "from": "religion", "type": "bridges", "to": "vervaeke", "note": "Can secular institutions reproduce ritual, belonging, and moral formation?" },
+    { "from": "four-knowings", "type": "bridges", "to": "ai-and-cognition", "note": "Which kinds of knowing does AI weaken?" },
+    { "from": "self-security", "type": "tension_with", "to": "motivation", "note": "Does secure self-worth reduce drive?" },
+    { "from": "relational-ai", "type": "depends_on", "to": "attachment", "note": "Companion design rests on attachment theory whether or not designers know it." },
+    { "from": "philosophy-of-mind", "type": "bridges", "to": "alignment", "note": "Moral patienthood of systems we are trying to control." },
+    { "from": "eudaimonia", "type": "supports", "to": "flourishing-components", "note": "Aristotle is the spine of the flourishing question." },
+    { "from": "learning", "type": "instance_of", "to": "epistemology", "note": "How you learn is an empirical branch of how you know." },
+    { "from": "institutions-and-flourishing", "type": "tension_with", "to": "private", "note": "Can a profit-maximizing firm reliably pursue public benefit?" }
+  ]
+}

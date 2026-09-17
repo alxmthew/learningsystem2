@@ -1,0 +1,13 @@
+# The rotation. Hard cap of 3 to 5, enforced at write time.
+# To add a sixth you must retire one and write a line of "where I got to",
+# which is appended to that question file under ## Where I got to.
+
+focus:
+  - what-is-a-meaningful-life
+  - secure-without-complacent
+  - capacities-to-cultivate
+  - what-is-knowing
+  - how-far-does-scaling-go
+
+# Questions pulled out of rotation, newest first. Kept so the trail is visible.
+retired: []

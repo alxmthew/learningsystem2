@@ -1,0 +1,47 @@
+# Typed relations between nodes. The tree cannot express what matters most.
+# Types: supports | contradicts | depends_on | instance_of | tension_with | bridges | answers | prompted_by
+# `bridges` across trunks is the interesting one, and the only edge the map draws as a curve.
+
+edges:
+  - from: god
+    type: bridges
+    to: meaning
+    note: Does meaning require cosmic grounding?
+  - from: religion
+    type: bridges
+    to: institutions
+    note: Why do charismatic movements become bureaucracies?
+  - from: religion
+    type: bridges
+    to: vervaeke
+    note: Can secular institutions reproduce ritual, belonging, and moral formation?
+  - from: four-knowings
+    type: bridges
+    to: ai-and-cognition
+    note: Which kinds of knowing does AI weaken?
+  - from: self-security
+    type: tension_with
+    to: motivation
+    note: Does secure self-worth reduce drive?
+  - from: relational-ai
+    type: depends_on
+    to: attachment
+    note: >-
+      Companion design rests on attachment theory whether or not designers know
+      it.
+  - from: philosophy-of-mind
+    type: bridges
+    to: alignment
+    note: Moral patienthood of systems we are trying to control.
+  - from: eudaimonia
+    type: supports
+    to: flourishing-components
+    note: Aristotle is the spine of the flourishing question.
+  - from: learning
+    type: instance_of
+    to: epistemology
+    note: How you learn is an empirical branch of how you know.
+  - from: institutions-and-flourishing
+    type: tension_with
+    to: private
+    note: Can a profit-maximizing firm reliably pursue public benefit?

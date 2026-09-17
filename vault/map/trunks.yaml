@@ -1,0 +1,18 @@
+# Five fixed top-level domains. Not user-editable in v1.
+
+trunks:
+  - id: reality
+    name: Reality
+    question: What is true?
+  - id: mind
+    name: Mind
+    question: How do minds work?
+  - id: life
+    name: Life
+    question: How should I live?
+  - id: civilization
+    name: Civilization
+    question: What world are we building?
+  - id: creation
+    name: Creation
+    question: What do I do with what I know?
